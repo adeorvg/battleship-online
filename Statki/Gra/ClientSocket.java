@@ -18,12 +18,14 @@ public class ClientSocket {
 	private BufferedReader br;
 	private boolean connected;
 	
-	public ClientSocket(){ //localhost & random Port
+	//localhost & random Port
+	public ClientSocket(){ 
 		this.serverIP = "localhost";
 		this.port = randomPort();
 	}
 	
-	public ClientSocket(String serverIP){ //random Port
+	//random Port
+	public ClientSocket(String serverIP){ 
 		this.serverIP = serverIP;
 		this.port = randomPort();
 	}
@@ -33,8 +35,9 @@ public class ClientSocket {
 		this.port = port;
 	}
 	
+	//ports from 1024 to 65535
 	private static int randomPort() {
-		return 1024+(int)Math.random()*64511; //ports from 1024 to 65535
+		return 1024+(int)Math.random()*64511; 
 	}
 	
 	public void openConnection() {
