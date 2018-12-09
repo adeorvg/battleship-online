@@ -10,34 +10,27 @@ import java.net.Socket;
 
 public class ClientSocket {
 	private String serverIP;
-	private int port;
 	private Socket socket;
 	private OutputStream os;
 	private InputStream is;
 	private PrintWriter pw;
 	private BufferedReader br;
 	private boolean connected;
+	private static final int port = 50000;
+	private static final int clientID = generateID();
 	
-	//localhost & random Port
+	//localhost
 	public ClientSocket(){ 
 		this.serverIP = "localhost";
-		this.port = randomPort();
 	}
 	
-	//random Port
 	public ClientSocket(String serverIP){ 
 		this.serverIP = serverIP;
-		this.port = randomPort();
 	}
 	
-	public ClientSocket(String serverIP, int port){
-		this.serverIP = serverIP;
-		this.port = port;
-	}
-	
-	//ports from 1024 to 65535
-	private static int randomPort() {
-		return 1024+(int)Math.random()*64511; 
+	public static int generateID() {
+		int ID = (int) Math.abs(System.currentTimeMillis());
+		return ID;
 	}
 	
 	public void openConnection() {
@@ -59,22 +52,23 @@ public class ClientSocket {
 		os.close();
 		socket.close();
 		connected = false;
+		//TODO info dla serwera
 		System.out.println("<Client closed>");
 	}
 	
 	public boolean sendMessage(Message message) {
 		pw.flush();
-		pw.println(message);
+		pw.println(clientID + "#" + message.toString());
 		return true;
 	}
 	
 	public String receiveMessage() {
-		String message = "error";
+		String message;
 		try {
 			message = br.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			message = "error";
 		}
 		return message;
 	}
@@ -82,9 +76,7 @@ public class ClientSocket {
 	public int getPort() {
 		return port;
 	}
-	public void setPort(int port) {
-		this.port = port;
-	}
+
 	public boolean isConnected() {
 		return connected;
 	}

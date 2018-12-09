@@ -1,19 +1,16 @@
 package Gra;
 
-//message length is always constant
-//format: 2chars content type; 1char #; 40chars content; 
-//lacking chars are filled with #
+//format: 2chars content type, rest for content
+//Each contructor for different type of message
 public class Message {
 	//ng - new game; sp - ships placement info; jg - join game; sh - shot
-	//validContentType = {"ng", "sp", "jg", "sh"}; 
 	private String contentType;
 	private String content;
-	private static final int length = 43;
 	
 	//default message, creating new game
 	public Message(){ 
 		contentType = "ng";
-		content = "";
+		content = ""; 
 	}
 	
 	//join game, with a gameID specified by a user
@@ -33,23 +30,16 @@ public class Message {
 		}
 	}
 	
-	//shot, eg: a4
-	public Message(String target){ 
-		if (target.length()<=2) {
+	//shot and info if last ship was hitted or destroyed
+	public Message(String target, boolean lastShipHitted, boolean lastShipDestroyed){ 
+		if (target.length()==2) {
 			contentType = "sh";
-			content = target;
+			String hitted;
+			String destroyed;
+			hitted = lastShipHitted ? "1" : "0";
+			destroyed = lastShipDestroyed ? "1" : "0";
+			content = hitted + "#" + destroyed + "#" + target + "#";
 		}
-	}
-	
-	private static String fillContentWithHash(String content) {
-		int diff = length - content.length();
-		StringBuilder sb = new StringBuilder();
-		sb.append(content);
-		for (int i=0; i<diff; i++) {
-			sb.append("#");
-		}
-		String contentFilled = sb.toString();
-		return contentFilled;
 	}
 	
 	//rows first, left to right
@@ -65,13 +55,13 @@ public class Message {
 	}
 	
 	public boolean isReady() {
-		if (this.toString().length() == 43) {
+		if (this.toString().length() > 1) {
 			return true;
 		} else return false;
 	}
 	
 	public String toString() {
-		return contentType + "#" + fillContentWithHash(content);
+		return contentType + "#" + content; 
 	}
 
 }
