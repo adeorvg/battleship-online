@@ -38,7 +38,7 @@ public class Message {
 			String destroyed;
 			hitted = lastShipHitted ? "1" : "0";
 			destroyed = lastShipDestroyed ? "1" : "0";
-			content = hitted + "#" + destroyed + "#" + target + "#";
+			content = hitted + "*" + destroyed + "*" + target;
 		}
 	}
 	
