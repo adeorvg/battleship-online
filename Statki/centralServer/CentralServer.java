@@ -44,6 +44,7 @@ class CentralServer {
 			e.printStackTrace();
 		}
     }
+    
     public void stop() {
     	try {
 			serverSocket.close();
