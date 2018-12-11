@@ -2,8 +2,8 @@ package centralServer;
 
 class Game {
 	private int gameID;
-	private int firstClientID;
-	private int secondClientID;
+	private Client firstClient;
+	private Client secondClient;
 	private boolean started;
 	private boolean finished;
 	
@@ -12,11 +12,20 @@ class Game {
 		started = true;
 	}
 	
-	public int generateID() {
+	private static int generateID() {
 		int ID = (int) Math.abs(System.currentTimeMillis()+10000*Math.random());
 		return ID;
 	}
 
+	public Client getOpponent(Client client) {
+		if(client.getID() == firstClient.getID()) {
+			return secondClient;
+		} else if (client.getID() == secondClient.getID()) {
+			return firstClient;
+		}
+		return null;
+	}
+	
 	/**
 	 * @return the gameID
 	 */
@@ -31,34 +40,21 @@ class Game {
 		this.gameID = gameID;
 	}
 
-	/**
-	 * @return the firstClientID
-	 */
-	public int getFirstClientID() {
-		return firstClientID;
+	public Client getFirstClient() {
+		return firstClient;
 	}
-
-	/**
-	 * @param firstClientID the firstClientID to set
-	 */
-	public void setFirstClientID(int firstClientID) {
-		this.firstClientID = firstClientID;
+	
+	public void setFirstClient(Client firstClient) {
+		this.firstClient = firstClient;
 	}
-
-	/**
-	 * @return the secondClientID
-	 */
-	public int getSecondClientID() {
-		return secondClientID;
+	
+	public Client getSecondClient() {
+		return secondClient;
 	}
-
-	/**
-	 * @param secondClientID the secondClientID to set
-	 */
-	public void setSecondClientID(int secondClientID) {
-		this.secondClientID = secondClientID;
+	
+	public void setSecondClient(Client secondClient) {
+		this.secondClient = secondClient;
 	}
-
 	/**
 	 * @return the started
 	 */
@@ -83,9 +79,15 @@ class Game {
 	/**
 	 * @param finished the finished to set
 	 */
+	
+	public void EndGame(Client winner) {
+		winner.setWin(true);
+		this.getOpponent(winner).setLoose(true);
+		finished = true;
+		CentralServer.gamesList.remove(this);
+	}
 	public void setFinished(boolean finished) {
 		this.finished = finished;
-		CentralServer.gamesList.remove(this);
 	}
 	
 	

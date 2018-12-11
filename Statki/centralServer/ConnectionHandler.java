@@ -22,8 +22,7 @@ class ConnectionHandler extends Thread{
 			String input;
 			while ((input = in.readLine()) != null) {
 				ReceivedMessage receivedMessage = new ReceivedMessage(input);
-				//TODO sprawdzenie czy receivedMessage isValid albo przynajmniej type
-				proceedBasingOnReceivedMessage(receivedMessage);
+				if (receivedMessage.isClientIdValid()) proceedBasingOnReceivedMessage(receivedMessage);
 			    out.println(input);
 			    //TODO if every ship destroyed  break
 			}
@@ -41,39 +40,38 @@ class ConnectionHandler extends Thread{
     }
     
     public synchronized void proceedBasingOnReceivedMessage(ReceivedMessage receivedMessage) {
+    	Client client = new Client(receivedMessage);
     	switch (receivedMessage.getContentType()) {
-    	//ng - new game; sp - ships placement info; jg - join game; sh - shot
         case "ng":
-        	if(receivedMessage.isClientIdValid()) {
-        		Game game = new Game();
-        		game.setFirstClientID(receivedMessage.getClientID);
-        		CentralServer.gamesList.add(game);
-        		System.out.println("Started game: "+game.getGameID()+" with client: "+ receivedMessage.getClientID);
-        	}
+    		Game game = new Game();
+    		game.setFirstClient(client);
+    		client.setTurn(true);
+    		CentralServer.gamesList.add(game);
+    		System.out.println("Started game: "+game.getGameID()+" with client: "+ receivedMessage.getClientID());
             break;
         case "sp":	
-        	//TODO
-        	System.out.println("Ships placed in game: "+game.getGameID()+" at client: "+ receivedMessage.getClientID);
+        	client.setShipsCoordinatesAndShips(receivedMessage.getShipsCoordinates());
+        	System.out.println("Ships placed in game: "+CentralServer.findGameByClient(client).getGameID()+" at client: "+ receivedMessage.getClientID());
             break;
         case "jg":
-        	if(receivedMessage.isGameIdValid()) {
-	        	for(Game tempGame:CentralServer.gamesList) {
-	        		if(receivedMessage.getJoiningGameID == tempGame.getGameID() ) {
-	        			tempGame.setSecondClientID(receivedMessage.getClientID());
-	        			System.out.println("Joining game: "+tempGame.getGameID());
-	        		}
-	        	}
+        	if(receivedMessage.isJoiningGameIdValid()) {
+        		Game gameToJoin = CentralServer.findGameByID(receivedMessage.getJoiningGameID());
+        		if (gameToJoin != null && gameToJoin.getSecondClient() != null) {
+        			gameToJoin.setSecondClient(client);
+        		}
+	        	System.out.println("Client: "+client.getID()+" joining game: "+gameToJoin.getGameID());
         	}
             break;
         case "sh":
-        	if(receivedMessage.isTargetValid) {
-        		for(Game tempGame:CentralServer.gamesList) {
-	        		if(receivedMessage.getClientID == tempGame.getFirstClientID(){
-	        			//sprawdz plansze drugiego klienta
-	        		} else (receivedMessage.getClientID == tempGame.getSecondClientID() ) {
-	        			//sprawdz plansze pierwszego klienta
-	        		} 
-	        	}
+        	Game foundGame = CentralServer.findGameByClient(client);
+        	if(client.getTurn() == true && receivedMessage.isTargetValid() && foundGame != null && foundGame.isFinished() == false && client.hasMoved() == false) {
+        		Client opponent = foundGame.getOpponent(client);
+        		client.shot(receivedMessage.getTarget(), opponent);
+        		client.setMoved(true);
+        		client.setTurn(false);
+        		opponent.setTurn(true);
+        		if(!opponent.hasAnyShipAlive()) foundGame.EndGame(client);
+        		//TODO send response to client
         	}
             break;
         default:
