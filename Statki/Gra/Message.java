@@ -30,15 +30,11 @@ public class Message {
 		}
 	}
 	
-	//shot and info if last ship was hitted or destroyed
-	public Message(String target, boolean lastShipHitted, boolean lastShipDestroyed){ 
+	//shot
+	public Message(String target){ 
 		if (target.length()==2) {
 			contentType = "sh";
-			String hitted;
-			String destroyed;
-			hitted = lastShipHitted ? "1" : "0";
-			destroyed = lastShipDestroyed ? "1" : "0";
-			content = hitted + "*" + destroyed + "*" + target;
+			content = target;
 		}
 	}
 	

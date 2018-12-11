@@ -23,13 +23,24 @@ class Client {
 		
 	}
 	
-	public void shot(String target, Client opponent) {
+	public boolean shot(String target, Client opponent) {
 		for (Iterator<Ship> iterator = opponent.getShips().iterator(); iterator.hasNext();) {
 		    Ship ship =  iterator.next();
 		    if (ship.getFields().contains(target)) {
 		        iterator.remove();
+		        if (!ship.hasAnyFieldsAlive()) ship.setDestroyed(true);
+		        return true;
 		    }       
 		}
+		return false;
+	}
+	
+	public Ship findShipByField(String field) {
+		for (Iterator<Ship> iterator = this.getShips().iterator(); iterator.hasNext();) {
+		    Ship ship =  iterator.next();
+		    if (ship.getFields().contains(field)) return ship;
+		}
+		return null;
 	}
 	
 	boolean hasAnyShipAlive() {

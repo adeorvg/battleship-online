@@ -8,11 +8,9 @@ class ReceivedMessage {
 	// validContentType = {"ng", "sp", "jg", "sh"};
 	private int clientID = 0;
 	private String contentType = "";
-	private String[] content = new String[1];
+	private String content = "";
 	private int joiningGameID = 0;
 	private int[][] shipsCoordinates = new int[1][1];
-	private boolean shipHitted = false;
-	private boolean shipDestroyed = false;
 	private String target = "";
 	private String[] validContentType = { "ng", "sp", "jg", "sh" };
 
@@ -35,33 +33,25 @@ class ReceivedMessage {
 		if (parsedInput[1] != null)
 			contentType = parsedInput[1];
 		if (parsedInput[2] != null)
-			content = parsedInput[2].split("*");
+			content = parsedInput[2];
 	}
 
-	private void convertStringContentToAttributes(String[] content) {
-		if (content.length == 1) {
+	private void convertStringContentToAttributes(String content) {
 			switch (contentType) {
 			case "jg":
 				try {
-					joiningGameID = Integer.parseInt(content[0]);
+					joiningGameID = Integer.parseInt(content);
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
 				break;
 			case "sp":
-				stringToTwoDimArray(content[0]);
+				stringToTwoDimArray(content);
+				break;
+			case "sh":
+				target = content;
+				break;
 			}
-		} else if (content.length > 2) {
-			if (content[0] != null) {
-				shipHitted = (content[0].equals("1")) ? true : false;
-			}
-			if (content[1] != null) {
-				shipDestroyed = (content[1].equals("1")) ? true : false;
-			}
-			if (content[2] != null) {
-				target = content[2];
-			}
-		}
 	}
 
 	private static int[][] stringToTwoDimArray(String string) {

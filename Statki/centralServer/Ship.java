@@ -39,6 +39,9 @@ class Ship {
 		return (char)(x+64);
 	}
 	
+	boolean hasAnyFieldsAlive() {
+		return !fields.isEmpty();
+	}
 	public Set<String> getFields(){
 		return fields;
 	}

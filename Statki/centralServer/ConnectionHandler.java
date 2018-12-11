@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import Gra.Message;
+
 class ConnectionHandler extends Thread{
 	private Socket clientSocket;
     private PrintWriter out;
@@ -66,12 +68,17 @@ class ConnectionHandler extends Thread{
         	Game foundGame = CentralServer.findGameByClient(client);
         	if(client.getTurn() == true && receivedMessage.isTargetValid() && foundGame != null && foundGame.isFinished() == false && client.hasMoved() == false) {
         		Client opponent = foundGame.getOpponent(client);
-        		client.shot(receivedMessage.getTarget(), opponent);
-        		client.setMoved(true);
-        		client.setTurn(false);
-        		opponent.setTurn(true);
-        		if(!opponent.hasAnyShipAlive()) foundGame.EndGame(client);
-        		//TODO send response to client
+        		Ship ship = opponent.findShipByField(receivedMessage.getTarget());
+        		if (ship.getDestroyed() == false) {
+	        		boolean shipHitted = client.shot(receivedMessage.getTarget(), opponent);
+	        		client.setMoved(true);
+	        		client.setTurn(false);
+	        		opponent.setTurn(true);
+	        		if(!opponent.hasAnyShipAlive()) foundGame.EndGame(client);
+	        		SentMessage message = new SentMessage(shipHitted, ship.getDestroyed(), client.getWin(), client.getLoose());
+	        		sendMessage(message);
+	        		
+        		}
         	}
             break;
         default:
@@ -79,6 +86,11 @@ class ConnectionHandler extends Thread{
             break;
     	}
     }
+    
+	public void sendMessage(SentMessage sentMessage) {
+		out.flush();
+		out.println(sentMessage);
+	}
     
 	public void closeConnection() {
 		try {
