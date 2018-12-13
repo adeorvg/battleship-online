@@ -10,6 +10,7 @@ class Game {
 	Game() {
 		gameID = generateID()-5;
 		started = true;
+		System.out.println("new game started: "+gameID);
 	}
 	
 	private static int generateID() {

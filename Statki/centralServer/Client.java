@@ -1,54 +1,37 @@
 package centralServer;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 class Client {
 	private int ID;
 	private boolean moved = false;
-	private int[][] shipsCoordinates;
-	private Set<Ship> ships = new HashSet<>();
+	private Board board;
 	private boolean win = false;
 	private boolean loose = false;
 	private boolean turn = false;
-	
+
 	Client(ReceivedMessage msg){
 		ID = msg.getClientID();
 	}
 	
-	public void setShipsCoordinatesAndShips(int[][] shipsCoordinates){
-		this.shipsCoordinates = shipsCoordinates;
-		for(int[] row:shipsCoordinates) ships.add(new Ship(row));
-		
-	}
-	
-	public boolean shot(String target, Client opponent) {
-		for (Iterator<Ship> iterator = opponent.getShips().iterator(); iterator.hasNext();) {
+	public void shot(String target) {
+		Field targetField = convertLetterAndNumToField(target);
+		for(Iterator<Ship> iterator = board.getShips().iterator(); iterator.hasNext();) {
 		    Ship ship =  iterator.next();
-		    if (ship.getFields().contains(target)) {
-		        iterator.remove();
-		        if (!ship.hasAnyFieldsAlive()) ship.setDestroyed(true);
-		        return true;
-		    }       
+		    int state = ship.getFields().contains(targetField) ? 2 : 4;
+		    board.getSpecificField( targetField.getX(), targetField.getY() ).setState(state);
+		    if (!ship.hasAliveFields()) board.destroy(ship);
 		}
-		return false;
 	}
 	
-	public Ship findShipByField(String field) {
-		for (Iterator<Ship> iterator = this.getShips().iterator(); iterator.hasNext();) {
-		    Ship ship =  iterator.next();
-		    if (ship.getFields().contains(field)) return ship;
-		}
-		return null;
+	private Field convertLetterAndNumToField(String target) {
+		int letter = (int)target.charAt(0)-64;
+		int number = target.charAt(1);
+		return new Field(letter,number);
 	}
-	
-	boolean hasAnyShipAlive() {
-		return !ships.isEmpty();
-	}
-	
-	public Set<Ship> getShips(){
-		return ships;
+
+	public void setBoard(Board board) {
+		this.board = board;
 	}
 	
 	public boolean hasMoved(){
@@ -57,10 +40,6 @@ class Client {
 	
 	public void setMoved(boolean moved){
 		this.moved = moved;
-	}
-	
-	public int[][] getShipsCoordinates(){
-		return shipsCoordinates;
 	}
 	
 	public void setID(int ID) {
@@ -86,5 +65,8 @@ class Client {
 	}
 	public void setTurn(boolean turn) {
 		this.turn=turn;
+	}
+	public Board getBoard() {
+		return board;
 	}
 }

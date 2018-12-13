@@ -22,8 +22,6 @@ class CentralServer {
 	
 	public static Game findGameByClient(Client client) {
 		for(Game game:gamesList) {
-			Client client1 = game.getFirstClient();
-			Client client2 = game.getSecondClient();
 			if (game.getFirstClient() != null && game.getFirstClient().getID() == client.getID()
 					|| game.getSecondClient() != null && game.getSecondClient().getID() == client.getID()) 
 				return game;
@@ -31,16 +29,26 @@ class CentralServer {
 		return null;
 	}
 	
+	public static Client findClientByID(int clientID) {
+		for(Game game:gamesList) {
+			if (game.getFirstClient() != null && game.getFirstClient().getID() == clientID)
+				return game.getFirstClient();
+			else if (game.getSecondClient() != null && game.getSecondClient().getID() == clientID)
+				return game.getSecondClient();		
+		}
+		return null;
+	}
+	
     public void start(int port){
         try {
 			serverSocket = new ServerSocket(port);
+			System.out.println("Started at port: "+port);
 			while (true) {
 				ConnectionHandler ch = new ConnectionHandler(serverSocket.accept());
 				ch.start();
 				connectionsList.add(ch);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -49,7 +57,6 @@ class CentralServer {
     	try {
 			serverSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

@@ -1,55 +1,51 @@
+//klasy Board, Ship i Field wspoldzialaja ze soba w celu wygenerowania dla klienta planszy po kazdym
+//oddaniu strzalu, oraz przy tworzeniu nowej gry
+
 package centralServer;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 class Ship {
-	private Set<String> fields = new HashSet<>();
-	boolean destroyed;
+	private Set<Field> fields = new HashSet<>();
+	private boolean destroyed;
 	
-	//np 21 51 - B1 E1 lub 21 25 - B1 B5
-	//zwraca pola statku
 	public Ship(int[] row) { 
-		if (row.length == 4){
-			char beginLetter = intToChar(row[0]);
+		if (row.length == 4) {
+			int beginLetter = row[0];
 			int beginNum = row[1];
-			char endLetter = intToChar(row[2]);
+			int endLetter = row[2];
 			int endNum = row[3];
 			if (beginLetter-endLetter == 0) {
 				for(int i=beginNum; i<endNum; i++) {
-					fields.add(beginLetter+""+i);
+					fields.add(new Field(beginLetter,i));
 				}
 			} else if(beginNum-endNum == 0) {
 				for(int i=beginLetter; i<=endLetter; i++) {
-					fields.add(i+""+beginNum);
+					fields.add(new Field(i,beginNum));
 				}
 			}
 			destroyed = false;
 		}
 	}
 	
-	public boolean isFieldsValid() {
-		for (String field:fields) {
-			if (field.length()!=2) return false;
+	public boolean hasAliveFields() {
+		for(Iterator<Field> iterator = fields.iterator(); iterator.hasNext();) {
+			Field field = iterator.next();
+			if(field.getState() == 1) return true;
 		}
-		return fields.size() >1 && fields.size() <= 10;
+		return false;
 	}
 	
-	private char intToChar(int x) {
-		return (char)(x+64);
-	}
-	
-	boolean hasAnyFieldsAlive() {
-		return !fields.isEmpty();
-	}
-	public Set<String> getFields(){
+	public Set<Field> getFields() {
 		return fields;
 	}
-	public boolean getDestroyed() {
-		return destroyed;
-	}
+	
 	public void setDestroyed(boolean destroyed) {
 		this.destroyed = destroyed;
 	}
-	
+	public boolean isDestroyed() {
+		return destroyed;
+	}
 }
