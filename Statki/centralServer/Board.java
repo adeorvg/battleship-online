@@ -58,4 +58,16 @@ class Board {
 	public Set<Ship> getShips() {
 		return ships;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<size; i++) {
+			for (int j=0; j<size; j++) {
+				int state = getSpecificField(i, j).getState();
+				sb.append(state);
+			}
+		}
+		return sb.toString();
+	}
 }

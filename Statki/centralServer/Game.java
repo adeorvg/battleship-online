@@ -27,6 +27,13 @@ class Game {
 		return null;
 	}
 	
+	public void EndGame(Client winner) {
+		winner.setWin(true);
+		this.getOpponent(winner).setLoose(true);
+		finished = true;
+		CentralServer.gamesList.remove(this);
+	}
+	
 	/**
 	 * @return the gameID
 	 */
@@ -80,13 +87,6 @@ class Game {
 	/**
 	 * @param finished the finished to set
 	 */
-	
-	public void EndGame(Client winner) {
-		winner.setWin(true);
-		this.getOpponent(winner).setLoose(true);
-		finished = true;
-		CentralServer.gamesList.remove(this);
-	}
 	public void setFinished(boolean finished) {
 		this.finished = finished;
 	}

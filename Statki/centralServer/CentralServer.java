@@ -1,15 +1,18 @@
 package centralServer;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 class CentralServer {
 	private ServerSocket serverSocket = null;
 	public static List<ConnectionHandler> connectionsList = new ArrayList<ConnectionHandler>();
 	public static List<Game> gamesList = new ArrayList<Game>();
+	public static Map<Integer, PrintWriter> outStreams;
 	
 	public static Game findGameByID(int gameID) {
 		for(Game game:gamesList) {

@@ -21,7 +21,7 @@ class ConnectionHandler extends Thread{
     public void run() {
         try {
         	System.out.println("New Client tries to connect");
-			initializeWriterAndReader();
+			initializeReader();
 			String input;
 			while ((input = in.readLine()) != null) {
 				ReceivedMessage receivedMessage = new ReceivedMessage(input);
@@ -29,14 +29,15 @@ class ConnectionHandler extends Thread{
 				System.out.println("Served client: "+receivedMessage.getClientID());
 			}
 
-			closeConnection();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			closeConnection();
 		}
     }
     
-    public void initializeWriterAndReader() throws IOException {
-    	out = new PrintWriter(clientSocket.getOutputStream(), true);
+    public void initializeReader() throws IOException {
 		in = new BufferedReader(
 		  new InputStreamReader(clientSocket.getInputStream()));
     }
@@ -44,6 +45,17 @@ class ConnectionHandler extends Thread{
     public synchronized void proceedBasingOnReceivedMessage(ReceivedMessage receivedMessage) {
     	Client check = CentralServer.findClientByID(receivedMessage.getClientID());
     	Client client = check != null ? check : new Client(receivedMessage);
+    	PrintWriter foundStream = CentralServer.outStreams.get((int)receivedMessage.getClientID());
+    	if (foundStream != null) {
+    		out = foundStream;
+    	} else {
+    		try {
+				out = new PrintWriter(clientSocket.getOutputStream(), true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    		CentralServer.outStreams.put( (Integer)receivedMessage.getClientID(), out);
+    	}
     	switch (receivedMessage.getContentType()) {
         case "ng":
     		Game game = new Game();
@@ -73,11 +85,14 @@ class ConnectionHandler extends Thread{
     			client.setMoved(true);
         		client.setTurn(false);
         		opponent.setTurn(true);
-	        	if(!opponent.getBoard().hasAliveShip()) foundGame.EndGame(client);
-	        		
-	        	//sendMessage(message);
-	        		
-        		}
+        		PrintWriter opponentOut = CentralServer.outStreams.get((Integer)opponent.getID());
+        		sendMessage(out, opponent.getBoard().toString());
+        		sendMessage(opponentOut, client.getBoard().toString());
+	        	if(!opponent.getBoard().hasAliveShip()) {
+	        		foundGame.EndGame(client);
+	        		closeConnection();
+	        	}
+        	}
             break;
         default:
         	System.out.println("Received it from: " +receivedMessage.getClientID());
@@ -86,9 +101,9 @@ class ConnectionHandler extends Thread{
     
 	}
 
-	public void sendMessage(SentMessage sentMessage) {
-		out.flush();
-		out.println(sentMessage);
+	public void sendMessage(PrintWriter pw, String message) {
+		pw.flush();
+		pw.println(message);
 	}
     
 	public void closeConnection() {
