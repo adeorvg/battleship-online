@@ -62,10 +62,12 @@ class ConnectionHandler extends Thread{
     		game.setFirstClient(client);
     		client.setTurn(true);
     		CentralServer.gamesList.add(game);
+    		sendMessage(out, "1");
     		System.out.println("Started game: "+game.getGameID()+" with client: "+ receivedMessage.getClientID());
             break;
         case "sp":	
         	client.setBoard(new Board( receivedMessage.getShipsCoordinates() ));
+        	sendMessage(out, "1");
         	System.out.println("Ships placed in game: "+CentralServer.findGameByClient(client).getGameID()+" at client: "+ receivedMessage.getClientID());
             break;
         case "jg":
@@ -73,8 +75,10 @@ class ConnectionHandler extends Thread{
         		Game gameToJoin = CentralServer.findGameByID(receivedMessage.getJoiningGameID());
         		if (gameToJoin != null && gameToJoin.getSecondClient() == null) {
         			gameToJoin.setSecondClient(client);
+        			sendMessage(out, "1");
+        			System.out.println("Client: "+client.getID()+" joining game: "+gameToJoin.getGameID());
+        		} else {System.out.println("Something went wrong");
         		}
-	        	System.out.println("Client: "+client.getID()+" joining game: "+gameToJoin.getGameID());
         	}
             break;
         case "sh":

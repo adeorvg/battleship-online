@@ -11,7 +11,7 @@ class Client {
 	private boolean turn = false;
 
 	Client(ReceivedMessage msg){
-		ID = msg.getClientID()==0? generateID() : msg.getClientID();
+		ID = msg.getClientID();
 	}
 	
 	public void shot(String target) {
@@ -28,11 +28,6 @@ class Client {
 		int letter = (int)target.charAt(0)-64;
 		int number = target.charAt(1);
 		return new Field(letter,number);
-	}
-	
-	private static int generateID() {
-		int ID = (int) Math.abs(System.currentTimeMillis()+10000*Math.random());
-		return ID;
 	}
 
 	public void setBoard(Board board) {
