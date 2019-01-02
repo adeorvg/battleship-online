@@ -23,19 +23,17 @@ class ReceivedMessage {
 		String[] parsedInput = new String[3];
 		if (input != null)
 			parsedInput = input.split("#");
-			int len = parsedInput.length;
-		int jumpToIndex = len==2? -1 : 0;
-		if (parsedInput[0] != null && len==3) {
+		if (parsedInput.length > 1 && parsedInput[0] != null ) {
 			try {
 				clientID = Integer.parseInt(parsedInput[0]);
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
 			}
 		}
-		if (parsedInput[1 + jumpToIndex] != null)
-			contentType = parsedInput[1 + jumpToIndex];
-		if (parsedInput[2 + jumpToIndex] != null)
-			content = parsedInput[2 + jumpToIndex];
+		if (parsedInput.length > 1 && parsedInput[1] != null )
+			contentType = parsedInput[1];
+		if (parsedInput.length > 2 && parsedInput[2] != null )
+			content = parsedInput[2];
 		}
 
 	private void convertStringContentToAttributes(String content) {

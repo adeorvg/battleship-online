@@ -25,16 +25,17 @@ class ConnectionHandler extends Thread{
 			String input;
 			while ((input = in.readLine()) != null) {
 				ReceivedMessage receivedMessage = new ReceivedMessage(input);
-				if (receivedMessage.isClientIdValid()) proceedBasingOnReceivedMessage(receivedMessage);
+				if (receivedMessage.isClientIdValid()) {
+					System.out.println("Processing Message...");
+					proceedBasingOnReceivedMessage(receivedMessage);
+				}
 				System.out.println("Served client: "+receivedMessage.getClientID());
 			}
 
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			closeConnection();
-		}
+		} 
     }
     
     public void initializeReader() throws IOException {
@@ -43,19 +44,20 @@ class ConnectionHandler extends Thread{
     }
     
     public synchronized void proceedBasingOnReceivedMessage(ReceivedMessage receivedMessage) {
-    	Client check = CentralServer.findClientByID(receivedMessage.getClientID());
-    	Client client = check != null ? check : new Client(receivedMessage);
-    	PrintWriter foundStream = CentralServer.outStreams.get((int)receivedMessage.getClientID());
+    	Client checkClient = CentralServer.findClientByID(receivedMessage.getClientID());
+    	Client client = checkClient != null ? checkClient : new Client(receivedMessage);
+    	PrintWriter foundStream = CentralServer.findOutStreamByClient(receivedMessage.getClientID());
     	if (foundStream != null) {
     		out = foundStream;
     	} else {
     		try {
 				out = new PrintWriter(clientSocket.getOutputStream(), true);
+				CentralServer.outStreams.put( (Integer)receivedMessage.getClientID(), out);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-    		CentralServer.outStreams.put( (Integer)receivedMessage.getClientID(), out);
     	}
+    	if(receivedMessage.getContentType().equals("ng")) System.out.println("dupa");
     	switch (receivedMessage.getContentType()) {
         case "ng":
     		Game game = new Game();
