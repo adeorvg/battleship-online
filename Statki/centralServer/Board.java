@@ -9,12 +9,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 class Board {
-	private int size;
+	private int size = 10;
 	private Set<Field> fields = new HashSet<>();
 	private Set<Ship> ships = new HashSet<>();
 	
 	public Board(int[][] shipsCoordinates) {
-		this.size = shipsCoordinates.length;
 		for (int[] row: shipsCoordinates) ships.add(new Ship(row));
 		for(int i=0; i<size;i++) {
 			for (int j=0; j<size; j++) {
