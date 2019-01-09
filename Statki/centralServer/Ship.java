@@ -18,7 +18,7 @@ class Ship {
 			int endLetter = row[2];
 			int endNum = row[3];
 			if (beginLetter-endLetter == 0) {
-				for(int i=beginNum; i<endNum; i++) {
+				for(int i=beginNum; i<=endNum; i++) {
 					fields.add(new Field(beginLetter,i));
 				}
 			} else if(beginNum-endNum == 0) {

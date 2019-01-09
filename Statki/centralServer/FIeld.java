@@ -51,7 +51,7 @@ class Field {
 		if (getClass() != obj.getClass())
 			return false;
 		Field other = (Field) obj;
-		return state == other.state && x == other.x && y == other.y;
+		return  x == other.x && y == other.y;
 	}
 
 
