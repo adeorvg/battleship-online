@@ -9,14 +9,15 @@ import java.util.Iterator;
 import java.util.Set;
 
 class Board {
-	private int size = 10;
+	private int size=11;
 	private Set<Field> fields = new HashSet<>();
 	private Set<Ship> ships = new HashSet<>();
-	
+
+
 	public Board(int[][] shipsCoordinates) {
 		for (int[] row: shipsCoordinates) ships.add(new Ship(row));
-		for(int i=1; i<=size;i++) {
-			for (int j=1; j<=size; j++) {
+		for(int i=0; i<=size;i++) {
+			for (int j=0; j<=size; j++) {
 				fields.add(new Field(i,j));
 			}
 		}
@@ -25,7 +26,7 @@ class Board {
 		    setStateOfFieldsUnderWholeShip( ship, 1);
 		}
 	}
-	
+
 	public boolean hasAliveShip() {
 		for(Iterator<Ship> iterator = ships.iterator(); iterator.hasNext();) {
 			Ship ship = iterator.next();
@@ -33,19 +34,19 @@ class Board {
 		}
 		return false;
 	}
-	
+
 	public void setStateOfFieldsUnderWholeShip(Ship ship, int state) {
 		for (Iterator<Field> iterator = fields.iterator(); iterator.hasNext();) {
 		    Field field = iterator.next();
 		    if (ship.getFields().contains(field)) field.setState(state);
 		}
 	}
-	
+
 	public void destroy(Ship ship) {
 		setStateOfFieldsUnderWholeShip(ship, 3);
 		ship.setDestroyed(true);
 	}
-	
+
 	public Field getSpecificField(int x, int y) {
 		for (Iterator<Field> iterator = fields.iterator(); iterator.hasNext();) {
 		    Field field = iterator.next();
@@ -53,11 +54,11 @@ class Board {
 		}
 		return null;
 	}
-	
+
 	public Set<Ship> getShips() {
 		return ships;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

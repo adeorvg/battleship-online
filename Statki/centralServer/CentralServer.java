@@ -14,7 +14,7 @@ class CentralServer {
 	public static List<ConnectionHandler> connectionsList = new ArrayList<ConnectionHandler>();
 	public static List<Game> gamesList = new ArrayList<Game>();
 	public static Map<Integer, PrintWriter> outStreams = new HashMap<Integer,PrintWriter>();
-	
+
 	public static Game findGameByID(int gameID) {
 		for(Game game:gamesList) {
 			if (game.getGameID() == gameID) {
@@ -23,23 +23,28 @@ class CentralServer {
 		}
 		return null;
 	}
-	
+
+  public  ServerSocket getServerSocket()
+	{
+		return serverSocket;
+	}
+
 	public static Game findGameByClient(Client client) {
 		for(Game game:gamesList) {
 			if (game.getFirstClient() != null && game.getFirstClient().getID() == client.getID()
-					|| game.getSecondClient() != null && game.getSecondClient().getID() == client.getID()) 
+					|| game.getSecondClient() != null && game.getSecondClient().getID() == client.getID())
 				return game;
 			}
 		return null;
 	}
-	
+
 	public static Client findClientByID(int clientID) {
 		if (!gamesList.isEmpty()) {
 			for(Game game:gamesList) {
 				if (game.getFirstClient() != null && game.getFirstClient().getID() == clientID)
 					return game.getFirstClient();
 				else if (game.getSecondClient() != null && game.getSecondClient().getID() == clientID)
-					return game.getSecondClient();		
+					return game.getSecondClient();
 			}
 		}
 		return null;
@@ -51,21 +56,22 @@ class CentralServer {
 		}
 		return null;
 	}
-	
+
     public void start(int port){
         try {
 			serverSocket = new ServerSocket(port);
-			System.out.println("Started at port: "+port);
+			System.out.println("Started at port: "+serverSocket.getLocalPort());
 			while (true) {
 				ConnectionHandler ch = new ConnectionHandler(serverSocket.accept());
 				ch.start();
 				connectionsList.add(ch);
+				System.out.println("New connection handler had started");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
-    
+
     public void stop() {
     	try {
 			serverSocket.close();
@@ -73,6 +79,5 @@ class CentralServer {
 			e.printStackTrace();
 		}
     }
-	
-}
 
+}

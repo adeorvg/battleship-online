@@ -10,7 +10,7 @@ class ReceivedMessage {
 	private String contentType = "";
 	private String content = "";
 	private int joiningGameID = 0;
-	private int[][] shipsCoordinates = new int[1][1];
+	private int[][] shipsCoordinates = new int[2][4];
 	private String target = "";
 	private String[] validContentType = { "ng", "sp", "jg", "sh" };
 
@@ -47,7 +47,7 @@ class ReceivedMessage {
 				}
 				break;
 			case "sp":
-				stringToTwoDimArray(content);
+				shipsCoordinates = stringToTwoDimArray(content);
 				break;
 			case "sh":
 				target = content;
@@ -57,7 +57,7 @@ class ReceivedMessage {
 
 	private static int[][] stringToTwoDimArray(String string) {
 		char[] chars = string.toCharArray();
-		int[][] twoDimArray = new int[1][1];
+		int[][] twoDimArray = new int[chars.length/4][4];
 		if (chars.length > 0 && chars.length % 4 == 0) {
 			twoDimArray = new int[chars.length / 4][4];
 			for (int i = 0; i < chars.length / 4; i++) {
@@ -94,13 +94,14 @@ class ReceivedMessage {
 	}
 
 	public boolean isTargetValid() {
+		System.out.println(target);
 		boolean validLen = target.length() == 2;
-		char letter = target.charAt(0);
-		int value = Character.getNumericValue(letter);
-		boolean validLetter = value >= 10 && value <= 19; // oznacza litery od a do j
-		char num = target.charAt(1);
+		int value = (int)(target.charAt(0)) - 64;
+		int num = (int)(target.charAt(1)) - 48;
+		System.out.println(value);
+		System.out.println(num);
 		boolean validNumber = num >= 1 && num <= 10;
-		return validLen && validLetter && validNumber;
+		return validLen &&  validNumber;
 	}
 
 	public String getContentType() {
@@ -122,4 +123,10 @@ class ReceivedMessage {
 	public String getTarget() {
 		return target;
 	}
+	public String getContent()
+	{
+		return content;
+	}
 }
+
+

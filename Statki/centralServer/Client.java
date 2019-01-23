@@ -26,7 +26,7 @@ class Client {
 	
 	private Field convertLetterAndNumToField(String target) {
 		int letter = (int)target.charAt(0)-64;
-		int number = target.charAt(1);
+		int number =(int) target.charAt(1)-48;
 		return new Field(letter,number);
 	}
 

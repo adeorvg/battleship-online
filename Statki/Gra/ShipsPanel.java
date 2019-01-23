@@ -17,10 +17,10 @@ public class ShipsPanel extends JPanel
     private Dimension panelSize;
     
     private JLabel text;
-	
-	protected GameBoard settingBoard;
     
-	public ShipsPanel(int panelW, int panelH, String tx)
+	//protected GameBoard settingBoard;
+    
+	public ShipsPanel(int panelW, int panelH, String tx, GameBoard gBoard)
 	{
 		panelWidth = panelW;
 		panelHeight = panelH;
@@ -29,11 +29,11 @@ public class ShipsPanel extends JPanel
         text = new JLabel(tx);
         text.setFont(new Font(Font.MONOSPACED,Font.PLAIN, 20));
 		add(text);
-        settingBoard = new GameBoard(350,350);
-        settingBoard.setBackground(new Color(90,90,90));
+		//settingBoard = gBoard;
+        gBoard.setBackground(new Color(90,90,90));
 		//settingBoard.setBounds(10, 20, 1000, 10);
-        add(settingBoard);
-        settingBoard.repaint();
+        add(gBoard);
+        gBoard.repaint();
 
 	}
 	

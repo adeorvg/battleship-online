@@ -1,9 +1,9 @@
 package centralServer;
 
-class AppStart {
+public class AppStart {
 	public static boolean serverStart() {
 		CentralServer server = new CentralServer();
-		server.start(50000);
+		server.start(8080);
 		return true;
 	}
 }
