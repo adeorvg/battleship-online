@@ -5,12 +5,17 @@ package Gra;
 public class Message {
 	//ng - new game; sp - ships placement info; jg - join game; sh - shot
 	private String contentType;
-	private String content;
+	public String content;
 	
 	//default message, creating new game
 	public Message(){ 
 		contentType = "ng";
-		content = ""; 
+		content = "1"; 
+	}
+	public Message(String ContentType, String Content )
+	{
+		content=Content;
+		contentType=ContentType;
 	}
 	
 	//join game, with a gameID specified by a user
@@ -30,24 +35,20 @@ public class Message {
 		}
 	}
 	
-	//shot and info if last ship was hitted or destroyed
-	public Message(String target, boolean lastShipHitted, boolean lastShipDestroyed){ 
+	//shot
+	public Message(String target){ 
 		if (target.length()==2) {
 			contentType = "sh";
-			String hitted;
-			String destroyed;
-			hitted = lastShipHitted ? "1" : "0";
-			destroyed = lastShipDestroyed ? "1" : "0";
-			content = hitted + "#" + destroyed + "#" + target + "#";
+			content = target;
 		}
 	}
 	
 	//rows first, left to right
 	private static String twoDimArrayToString(int[][] twoDimArray) {
 		StringBuilder sb = new StringBuilder();
-		for (int j=0; j<twoDimArray[0].length; j++) {
-			for (int i=0; i<twoDimArray.length; i++) {
-				sb.append(twoDimArray[i][j]);
+		for (int j=0; j<twoDimArray.length; j++) {
+			for (int i=0; i<twoDimArray[0].length; i++) {
+				sb.append(twoDimArray[j][i]);
 			}
 		}
 		String convertedArray = sb.toString();
@@ -63,5 +64,10 @@ public class Message {
 	public String toString() {
 		return contentType + "#" + content; 
 	}
+	public String getContent()
+	{
+		return content;
+	}
+	
 
 }

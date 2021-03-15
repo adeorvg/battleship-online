@@ -17,13 +17,28 @@ public class GameBoard extends JPanel
     
     protected static Square[][] pola;
     
+    public int[][] fields;
+    
+    
 	public GameBoard(int panelW, int panelH)
 	{
 		panelWidth = panelW;
 		panelHeight = panelH;
+		resetField();
+		
 		boardSize = new Dimension(panelWidth, panelHeight);
         setPreferredSize(boardSize);
         makeSquares();
+	}
+	
+	private void resetField() 
+	{
+		fields = new int[11][11];
+		for(int i=0; i<11; i++) {
+			for(int j=0; j<11; j++) {
+				fields[i][j] = 0;
+			}
+		}
 	}
 	
     private void makeSquares()
@@ -37,7 +52,7 @@ public class GameBoard extends JPanel
             startX=4;
             for(int m=0;m<11;m++) 
             {
-                pola[n][m] = new Square(startX, startY, 0);
+                pola[n][m] = new Square(startX, startY, fields[n][m]);
                 startX += 32;
                 if(m==0) startX-=5;
             }
@@ -63,10 +78,23 @@ public class GameBoard extends JPanel
 	        }
 	}
 	
+	public void changeFields(int[][] freeFields)
+	{
+		fields = new int[11][11];
+		for(int i=0; i<11; i++) {
+			for(int j=0; j<11; j++) {
+				fields[i][j] = freeFields[i][j];
+				//System.out.println(fields[i][j]);
+			}
+		}
+	}
+	
 	private void drawSquares(Graphics g, int m, int n)
 	{
+		makeSquares();
 		String[] alfa = new String[] {"A","B","C","D","E","F","G","H"," I","J"};
 		Square pole = pola[m][n];
+		//System.out.println(fields[n][m]);
 		g.setColor(pole.getColorFromType());
 		if(m==0 && m!=n)
 		{

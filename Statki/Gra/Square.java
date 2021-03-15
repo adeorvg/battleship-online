@@ -19,15 +19,15 @@ public class Square extends JPanel
 		switch(number){
 		
 			case 4:
-				return typeOfSquare.GREY;	//pole sprawdzone/pud³o
+				return typeOfSquare.GREY;	//pole sprawdzone/pudÂ³o
 			case 3:
 				return typeOfSquare.BLACK;	//pole statku zniszczonego
 			case 2:
 				return typeOfSquare.RED;	//pole statku trafionego
 			case 1:	
-				return typeOfSquare.BLUE;	//pole statku ¿ywego
+				return typeOfSquare.BLUE;	//pole statku Â¿ywego
 			case 0:
-				return typeOfSquare.WHITE;	//pole puste/niezajête/niesprawdzone
+				return typeOfSquare.WHITE;	//pole puste/niezajÃªte/niesprawdzone
 			default:
 				return typeOfSquare.WHITE;
 		}

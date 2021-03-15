@@ -16,23 +16,23 @@ public class ClientSocket {
 	private PrintWriter pw;
 	private BufferedReader br;
 	private boolean connected;
-	private static final int port = 50000;
+	private static final int port = 8080;
 	private static final int clientID = generateID();
-	
+
 	//localhost
-	public ClientSocket(){ 
+	public ClientSocket(){
 		this.serverIP = "localhost";
 	}
-	
-	public ClientSocket(String serverIP){ 
+
+	public ClientSocket(String serverIP){
 		this.serverIP = serverIP;
 	}
-	
+
 	public static int generateID() {
 		int ID = (int) Math.abs(System.currentTimeMillis());
 		return ID;
 	}
-	
+
 	public void openConnection() {
 		try {
 			socket = new Socket(serverIP, port);
@@ -44,9 +44,9 @@ public class ClientSocket {
 		} catch (Exception e) {
 			e.printStackTrace();
 			connected = false;
-		} 
+		}
 	}
-	
+
 	public void closeConnection() throws IOException {
 		pw.close();
 		os.close();
@@ -55,13 +55,13 @@ public class ClientSocket {
 		//TODO info dla serwera
 		System.out.println("<Client closed>");
 	}
-	
+
 	public boolean sendMessage(Message message) {
 		pw.flush();
 		pw.println(clientID + "#" + message.toString());
 		return true;
 	}
-	
+
 	public String receiveMessage() {
 		String message;
 		try {
@@ -72,9 +72,15 @@ public class ClientSocket {
 		}
 		return message;
 	}
-	
+
+
 	public int getPort() {
 		return port;
+	}
+
+	public int getId()
+	{
+		return clientID;
 	}
 
 	public boolean isConnected() {

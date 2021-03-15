@@ -1,32 +1,32 @@
 package Gra;
-// klasa definiuj¹ca statek
+// klasa definiujÂ¹ca statek
 
 public class Ship {
 
-	// zmienne wspó³rzêdnych pocz¹tku i koñca statku, myœlê ¿e lepiej bêdzie obie wspó³rzêdne traktowaæ jako liczbê
-	// tylko wizualnie bêdzie siê prezentowa³o jedn¹ z nich u¿ytkownikowi jako literê
+	// zmienne wspÃ³Â³rzÃªdnych poczÂ¹tku i koÃ±ca statku, myÂœlÃª Â¿e lepiej bÃªdzie obie wspÃ³Â³rzÃªdne traktowaÃ¦ jako liczbÃª
+	// tylko wizualnie bÃªdzie siÃª prezentowaÂ³o jednÂ¹ z nich uÂ¿ytkownikowi jako literÃª
 	private int StartX;
 	private int StartY;
 	private int EndX;
 	private int EndY;
 	
-	private int id; //statek musi mieæ id ja to czujê
+	private int id; //statek musi mieÃ¦ id ja to czujÃª
 	
-	private int length; //d³ugoœæ statku
+	private int length; //dÂ³ugoÂœÃ¦ statku
 	
-	private boolean ShipAlive; //stan ¿ywego statku (niezatopionego)
+	private boolean ShipAlive; //stan Â¿ywego statku (niezatopionego)
 	private boolean ShipDead; //stan zatopionego statku
 	
-	//myœla³em nad tym aby statek mia³ liczbê ¿yæ pocz¹tkowo równ¹ d³ugoœci i gdy osi¹gnie 0 wtedy siê zatopi
-	//ka¿de trafienie by zmniejsza³o ¿ycie o 1
+	//myÂœlaÂ³em nad tym aby statek miaÂ³ liczbÃª Â¿yÃ¦ poczÂ¹tkowo rÃ³wnÂ¹ dÂ³ugoÂœci i gdy osiÂ¹gnie 0 wtedy siÃª zatopi
+	//kaÂ¿de trafienie by zmniejszaÂ³o Â¿ycie o 1
 	
-	//zwyk³y konstruktor
+	//zwykÂ³y konstruktor
 	public Ship() {
 		this.ShipAlive = true;
 		this.ShipDead = false;
 	}
 	
-	//konstruktor z deklaracj¹ d³ugoœci
+	//konstruktor z deklaracjÂ¹ dÂ³ugoÂœci
 	public Ship(int length) {
 		this.length = length;
 		this.ShipAlive = true;
@@ -41,7 +41,7 @@ public class Ship {
 		this.EndY = EndY;
 	}
 	
-	//funkcja sprawdzaj¹ca czy statek jest poprawny (pod wzglêdem wspó³rzêdnych i ich relacji z d³ugoœci¹)
+	//funkcja sprawdzajÂ¹ca czy statek jest poprawny (pod wzglÃªdem wspÃ³Â³rzÃªdnych i ich relacji z dÂ³ugoÂœciÂ¹)
 	public boolean checkShip() {
 		if(StartX == EndX) {
 			if(Math.abs(EndY-StartY)==length-1) {
